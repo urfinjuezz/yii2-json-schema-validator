@@ -1,5 +1,5 @@
 <?php
-namespace dstotijn\yii2jsv;
+namespace urfinjuezz\yii2jsv;
 
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator as JSValidator;

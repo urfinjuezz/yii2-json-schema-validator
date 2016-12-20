@@ -2,10 +2,10 @@
 
 namespace tests\codeception\unit\models;
 
-use dstotijn\yii2jsv\JsonSchemaValidator;
-use dstotijn\yii2jsv\tests\data\models\Car;
-use dstotijn\yii2jsv\tests\data\models\CarWithBadSchema;
-use dstotijn\yii2jsv\tests\data\models\CarWithoutSchema;
+use urfinjuezz\yii2jsv\JsonSchemaValidator;
+use urfinjuezz\yii2jsv\tests\data\models\Car;
+use urfinjuezz\yii2jsv\tests\data\models\CarWithBadSchema;
+use urfinjuezz\yii2jsv\tests\data\models\CarWithoutSchema;
 use yii\codeception\TestCase;
 
 class JsonSchemaValidatorTest extends TestCase

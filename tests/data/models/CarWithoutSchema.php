@@ -1,8 +1,8 @@
 <?php
 
-namespace dstotijn\yii2jsv\tests\data\models;
+namespace urfinjuezz\yii2jsv\tests\data\models;
 
-use dstotijn\yii2jsv\JsonSchemaValidator;
+use urfinjuezz\yii2jsv\JsonSchemaValidator;
 use yii\base\Model;
 
 /**

@@ -25,9 +25,9 @@
     },
     "autoload": {
         "psr-4": {
-            "dstotijn\\yii2jsv\\": "src/",
-            "dstotijn\\yii2jsv\\tests\\": "tests/",
-            "dstotijn\\yii2jsv\\tests\\data\\models\\": "tests/data/models/"
+            "urfinjuezz\\yii2jsv\\": "src/",
+            "urfinjuezz\\yii2jsv\\tests\\": "tests/",
+            "urfinjuezz\\yii2jsv\\tests\\data\\models\\": "tests/data/models/"
         }
     }
 }
