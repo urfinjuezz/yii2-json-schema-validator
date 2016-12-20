@@ -42,6 +42,16 @@ class JsonSchemaValidator extends Validator
     public $notJsonString;
 
     /**
+     * @var boolean if attribute is json string
+     */
+    public $validateJson;
+
+    /**
+     * @var string User-defined error message used when the value is not an array
+     */
+    public $notArray;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -75,6 +85,16 @@ class JsonSchemaValidator extends Validator
         if (!is_string($this->schema)) {
             throw new InvalidConfigException($this->schemaNotString);
         }
+
+        if (null === $this->validateJson) {
+            $this->validateJson = false;
+        } elseif (!is_bool($this->validateJson)) {
+            throw new InvalidConfigException(Yii::t('app', 'validateJson must be boolean'));
+        }
+
+        if (null === $this->notArray) {
+            $this->notArray = Yii::t('app', 'The value must be an array.');
+        }
     }
 
     /**
@@ -82,14 +102,25 @@ class JsonSchemaValidator extends Validator
      */
     public function validateAttribute($model, $attribute)
     {
-        if (!is_string($model->$attribute)) {
-            $this->addError($model, $attribute, $this->notString);
-            return;
-        }
+        if ($this->validateJson) {
+            if (!is_string($model->$attribute)) {
+                $this->addError($model, $attribute, $this->notString);
+                return;
+            }
+            $value = json_decode($model->$attribute);
 
-        $value = json_decode($model->$attribute);
-        if (json_last_error()) {
-            $this->addError($model, $attribute, $this->notJsonString);
+            if (json_last_error()) {
+                $this->addError($model, $attribute, $this->notJsonString);
+            }
+        } else {
+            if (is_array($model->$attribute)) {
+                $value = (object)$model->$attribute;
+            } elseif (!is_object($model->$attribute)) {
+                $this->addError($model, $attribute, $this->notArray);
+                return;
+            } else {
+                $value = $model->$attribute;
+            }
         }
 
         $retriever = new UriRetriever();
@@ -116,18 +147,27 @@ class JsonSchemaValidator extends Validator
     /**
      * Validates a value.
      *
-     * @param string $value A JSON encoded string to validate.
+     * @param array|string $value An array or JSON encoded string to validate.
      * @return array|null An array of error data, or null if the data is valid.
      */
     protected function validateValue($value)
     {
-        if (!is_string($value)) {
-            return [$this->notString, []];
-        }
 
-        $value = json_decode($value);
-        if (json_last_error()) {
-            return [$this->notJsonString, []];
+        if ($this->validateJson) {
+            if (!is_string($value)) {
+                return [$this->notString, []];
+            }
+            $value = json_decode($value);
+
+            if (json_last_error()) {
+                return [$this->notJsonString, []];
+            }
+        } else {
+            if (is_array($value)) {
+                $value = (object)$value;
+            } elseif (!is_object($value)) {
+                return [$this->notArray, []];
+            }
         }
 
         $retriever = new UriRetriever();

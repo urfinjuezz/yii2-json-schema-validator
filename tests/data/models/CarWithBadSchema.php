@@ -21,7 +21,7 @@ class CarWithBadSchema extends Model
     public function rules()
     {
         return [
-            ['data', JsonSchemaValidator::className(), 'schema' => true],
+            ['data', JsonSchemaValidator::className(), 'schema' => true,'validateJson'=>true],
         ];
     }
 }

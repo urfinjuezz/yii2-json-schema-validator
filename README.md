@@ -6,10 +6,14 @@
 A Yii 2 extension that provides a validation class that wraps
 [JSON Schema for PHP](https://github.com/justinrainbow/json-schema).
 
+Fork of 
+[dstotijn/yii2-json-schema-validator](https://github.com/dstotijn/yii2-json-schema-validator)
+which can validate arrays and objects
+
 ## Installation
 
 ```
-$ composer require dstotijn/yii2-json-schema-validator
+$ composer require UrfinJuezz/yii2-json-schema-validator
 ```
 
 ## Usage
@@ -27,7 +31,15 @@ use yii\base\Model;
 
 class YourCustomModel extends Model
 {
+    /**
+    * @var string JSON string to validate
+    */
     public $json;
+    
+    /**
+    * @var array|\stdClass
+    */
+    public $data;
 
     public function rules()
     {
@@ -36,9 +48,15 @@ class YourCustomModel extends Model
                 'json',
                 JsonSchemaValidator::className(),
                 'schema' => 'file://' . Yii::getAlias('@app/path/to/schema.json'),
+                'validateJson' => true,
                 /* or URL
                 'schema' => 'https://example.com/path/to/schema.json',
                 */
+            ],
+            [
+                 'data',
+                 JsonSchemaValidator::className(),
+                 'schema' => 'file://' . Yii::getAlias('@app/path/to/schema.json'),
             ],
         ];
     }

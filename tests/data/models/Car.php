@@ -22,7 +22,7 @@ class Car extends Model
     {
         return [
             ['data', JsonSchemaValidator::className(), 'schema' => 'file://' . __DIR__ . '/../json_schemas/car.json',
-                'skipOnEmpty' => false]
+                'skipOnEmpty' => false, 'validateJson'=>true]
         ];
     }
 }

@@ -25,7 +25,11 @@ class JsonSchemaValidatorTest extends TestCase
     public function testValidateValue()
     {
         $val = new JsonSchemaValidator(['schema' => $this->schema]);
-        $this->assertTrue($val->validate('{"brand":"Porsche","model":"928S","year":1982}'));
+        $dataString = '{"brand":"Porsche","model":"928S","year":1982}';
+        $data = json_decode($dataString);
+
+        $this->assertTrue($val->validate($data));
+
     }
 
     public function testValidateValueSchemaEmptyInvalidConfigException()
@@ -38,34 +42,41 @@ class JsonSchemaValidatorTest extends TestCase
     public function testValidateValueSchemaNotStringInvalidConfigException()
     {
         $this->setExpectedException('yii\base\InvalidConfigException', 'The "schema" property must be a a string.');
-        $val = new JsonSchemaValidator(['schema' => true]);
+        $val = new JsonSchemaValidator(['schema' => true, 'validateJson' => true]);
         $val->validate('foobar');
     }
 
     public function testValidateValueNotStringFail()
     {
-        $val = new JsonSchemaValidator(['schema' => $this->schema]);
+        $val = new JsonSchemaValidator(['schema' => $this->schema, 'validateJson' => true]);
         $val->validate(['foobar'], $error);
         $this->assertEquals('The value must be a string.', $error);
     }
 
-    public function testValidateValueNotJsonStringFail()
+    public function testValidateValueNotArrayFail()
     {
         $val = new JsonSchemaValidator(['schema' => $this->schema]);
+        $val->validate('{"brand":"Porsche","model":"928S","year":1982}', $error);
+        $this->assertEquals('The value must be an array.', $error);
+    }
+
+    public function testValidateValueNotJsonStringFail()
+    {
+        $val = new JsonSchemaValidator(['schema' => $this->schema, 'validateJson' => true]);
         $val->validate('{]', $error);
         $this->assertEquals('The value must be a valid JSON string.', $error);
     }
 
     public function testValidateValuePropertyFail()
     {
-        $val = new JsonSchemaValidator(['schema' => $this->schema]);
+        $val = new JsonSchemaValidator(['schema' => $this->schema, 'validateJson' => true]);
         $this->assertFalse($val->validate('{"foo":"bar"}', $error));
         $this->assertEquals('brand: The property brand is required.', $error);
     }
 
     public function testValidateValueRootElementFail()
     {
-        $val = new JsonSchemaValidator(['schema' => $this->schema]);
+        $val = new JsonSchemaValidator(['schema' => $this->schema, 'validateJson' => true]);
         $this->assertFalse($val->validate('"foobar"', $error));
         $this->assertEquals(': String value found, but an object is required.', $error);
     }
