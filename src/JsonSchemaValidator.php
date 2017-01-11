@@ -114,7 +114,7 @@ class JsonSchemaValidator extends Validator
             }
         } else {
             if (is_array($model->$attribute)) {
-                $value = (object)$model->$attribute;
+                $value = json_decode(json_encode($model->$attribute));
             } elseif (!is_object($model->$attribute)) {
                 $this->addError($model, $attribute, $this->notArray);
                 return;
@@ -164,7 +164,7 @@ class JsonSchemaValidator extends Validator
             }
         } else {
             if (is_array($value)) {
-                $value = (object)$value;
+                $value = json_decode(json_encode($value));
             } elseif (!is_object($value)) {
                 return [$this->notArray, []];
             }
